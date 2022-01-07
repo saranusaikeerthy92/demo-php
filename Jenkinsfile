@@ -29,8 +29,7 @@ pipeline{
               sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${ec2Instance}:/home/ec2-user"
                sh "ssh -o StrictHostKeyChecking=no ${ec2Instance}:/home/ec2-user "bash ./remote-script.sh ${IMAGE_NAME}""
               sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} "sudo docker login -u $USER -p $PASS""
-             
-   }
+           }
             }
         }
     }

@@ -24,7 +24,7 @@ pipeline{
     sshagent(['build-server-key']) {
    withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {  
               echo "DEPLOY THE PHP APP THRU DOCKER COMPOSE"
-              def ec2Instance = "ec2-user@172.31.38.89"
+              def ec2Instance = "ec2-user@172.31.4.206"
               def Cmd = "bash ./remote-script.sh ${IMAGE_NAME} ${USER} ${PASS}"
               sh "scp -o StrictHostKeyChecking=no remote-script.sh ${ec2Instance}:/home/ec2-user"
               sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${ec2Instance}:/home/ec2-user"

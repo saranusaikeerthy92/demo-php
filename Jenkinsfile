@@ -1,7 +1,7 @@
 pipeline{
     agent any
     environment{
-        IMAGE_NAME='devopstrainer/java-mvn-privaterepos:$BUILD_NUMBER'
+        IMAGE_NAME='devopstrainer/java-mvn-privaterepos:php$BUILD_NUMBER'
     }
     stages{
         stage("BUILD THE DOCKER IMAGE"){
@@ -20,10 +20,18 @@ pipeline{
         }
         stage("DEPLOY THE PHP APP"){
             steps{
-                script{
-                    echo "DEPLOY THE PHP APP THRU DOCKER COMPOSE"
-                }
+                script{           
+    sshagent(['build-server-key']) {
+   withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {  
+              echo "DEPLOY THE PHP APP THRU DOCKER COMPOSE"
+              sh "scp -o StrictHostKeyChecking=no remote-script.sh ec2-user@172.31.38.89:/home/ec2-user"
+              sh "scp -o StrictHostKeyChecking=no docker-compose.yml ec2-user@172.31.38.89:/home/ec2-user"
+              sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.38.89 sudo docker login -u $USER -p $PASS"
+              sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.38.89:/home/ec2-user 'bash ./remote-script.sh ${IMAGE_NAME}'"
+   }
             }
         }
+    }
+}
     }
 }

@@ -6,5 +6,5 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 sudo docker stop $(sudo docker ps -a -q)
 sudo docker rm $(sudo docker ps -a -q)
 sudo docker image prune -a
-sudo USER=$2 PASS=$3 docker login -u ${USER} -p ${PASS}
+sudo USER=$2 PASS=$3 docker login -u ${USERNAME} -p ${PASSWORD}
 sudo IMAGE=$1 docker-compose -f docker-compose.yml up -d

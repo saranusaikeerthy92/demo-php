@@ -8,11 +8,11 @@ pipeline{
             steps{
                 script{
                     echo "BUILDING THE DOCKER IMAGE"
-                withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                     sh 'sudo yum install docker -y'
                     sh 'sudo systemctl start docker'
                     sh "sudo docker build -t  ${IMAGE_NAME} ."
-                    sh 'sudo docker login -u $USER -p $PASS'
+                    sh 'sudo docker login -u $USERNAME -p $PASSWORD'
                     sh "sudo docker push ${IMAGE_NAME}"
                 }
                 }
@@ -21,8 +21,8 @@ pipeline{
         stage("DEPLOY THE PHP APP"){
             steps{
                 script{           
-    sshagent([agent any]) {
-   withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {  
+    sshagent(['test-server-key']) {
+withCredentials([usernamePassword(credentialsId: 'dockhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {  
               echo "DEPLOY THE PHP APP THRU DOCKER COMPOSE"
               def ec2Instance = "ec2-user@172.31.4.206"
               def Cmd = "bash ./remote-script.sh ${IMAGE_NAME} ${USER} ${PASS}"

@@ -1,7 +1,7 @@
 pipeline{
     agent any
     environment{
-        IMAGE_NAME='devopstrainer/java-mvn-privaterepos:php$BUILD_NUMBER'
+        IMAGE_NAME='28141108/java-mvn-privaterepos:php$BUILD_NUMBER'
     }
     stages{
         stage("BUILD THE DOCKER IMAGE"){
@@ -21,7 +21,7 @@ pipeline{
         stage("DEPLOY THE PHP APP"){
             steps{
                 script{           
-    sshagent(['build-server-key']) {
+    sshagent([agent any]) {
    withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {  
               echo "DEPLOY THE PHP APP THRU DOCKER COMPOSE"
               def ec2Instance = "ec2-user@172.31.4.206"

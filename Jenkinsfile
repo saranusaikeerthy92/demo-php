@@ -25,7 +25,7 @@ pipeline{
 withCredentials([usernamePassword(credentialsId: 'dockhub', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {  
               echo "DEPLOY THE PHP APP THRU DOCKER COMPOSE"
               def ec2Instance = "ec2-user@172.31.12.151"
-              def Cmd = "bash ./remote-script.sh ${IMAGE_NAME} ${USER} ${PASS}"
+              def Cmd = "bash ./remote-script.sh ${IMAGE_NAME} ${USERNAME} ${PASSWORD}"
               sh "scp -o StrictHostKeyChecking=no remote-script.sh ${ec2Instance}:/home/ec2-user"
               sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${ec2Instance}:/home/ec2-user"
             sh "ssh -o StrictHostKeyChecking=no ${ec2Instance} ${Cmd}" 
